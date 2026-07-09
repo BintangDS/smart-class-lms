@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'LMS Dashboard') - Fun Teacher Private</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind & Vite Assets -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.5);
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col antialiased">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-40 w-full border-b border-slate-800/60 bg-slate-900/80 backdrop-blur-md">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/30">
+                        <span class="text-lg font-bold text-white">F</span>
+                    </div>
+                    <div>
+                        <span class="text-lg font-bold bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">Fun Teacher LMS</span>
+                        <span class="ml-1 rounded bg-indigo-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-indigo-400 border border-indigo-500/20">PORTFOLIO</span>
+                    </div>
+                </div>
+
+                @auth
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex flex-col text-right">
+                        <span class="text-sm font-semibold text-slate-200">{{ Auth::user()->name }}</span>
+                        <span class="text-xs text-slate-400 capitalize">{{ Auth::user()->role }}</span>
+                    </div>
+                    <div class="h-9 w-9 rounded-full bg-slate-800 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold uppercase">
+                        {{ substr(Auth::user()->name, 0, 2) }}
+                    </div>
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="rounded-lg bg-slate-800 hover:bg-slate-700/80 px-3 py-1.5 text-xs font-semibold text-slate-300 transition duration-200 border border-slate-700 hover:border-slate-600">
+                            Keluar
+                        </button>
+                    </form>
+                </div>
+                @endauth
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+        <!-- Toast Alerts -->
+        @if(session('success'))
+            <div class="mb-6 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-4 text-emerald-400 flex items-center gap-3">
+                <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="text-sm font-medium">{{ session('success') }}</span>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="mb-6 rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-rose-400 flex items-center gap-3">
+                <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span class="text-sm font-medium">{{ session('error') }}</span>
+            </div>
+        @endif
+
+        @if(session('info'))
+            <div class="mb-6 rounded-xl border border-sky-500/20 bg-sky-500/10 p-4 text-sky-400 flex items-center gap-3">
+                <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span class="text-sm font-medium">{{ session('info') }}</span>
+            </div>
+        @endif
+
+        @yield('content')
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-900 bg-slate-950/40 py-6 text-center text-sm text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p>&copy; 2026 Fun Teacher Private LMS. Dikembangkan oleh <span class="text-slate-300 font-medium">Bintang Darma Sakti</span>.</p>
+        </div>
+    </footer>
+</body>
+</html>
