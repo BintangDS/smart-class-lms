@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Fun Teacher Private LMS</title>
+    <title>Login - Smart Class LMS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,10 +23,10 @@
         <!-- Logo & Header -->
         <div class="text-center">
             <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-500 to-violet-600 shadow-xl shadow-indigo-500/20">
-                <span class="text-2xl font-bold text-white">F</span>
+                <span class="text-2xl font-bold text-white">S</span>
             </div>
             <h2 class="mt-6 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Fun Teacher LMS
+                Smart Class LMS
             </h2>
             <p class="mt-2 text-sm text-slate-400">
                 Portal LMS Portofolio Laravel & API

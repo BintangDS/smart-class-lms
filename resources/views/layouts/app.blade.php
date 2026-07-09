@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'LMS Dashboard') - Fun Teacher Private</title>
+    <title>@yield('title', 'LMS Dashboard') - Smart Class LMS</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,10 +41,10 @@
             <div class="flex h-16 items-center justify-between">
                 <div class="flex items-center gap-3">
                     <div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-indigo-500 to-violet-600 shadow-lg shadow-indigo-500/30">
-                        <span class="text-lg font-bold text-white">F</span>
+                        <span class="text-lg font-bold text-white">S</span>
                     </div>
                     <div>
-                        <span class="text-lg font-bold bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">Fun Teacher LMS</span>
+                        <span class="text-lg font-bold bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">Smart Class LMS</span>
                         <span class="ml-1 rounded bg-indigo-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-indigo-400 border border-indigo-500/20">PORTFOLIO</span>
                     </div>
                 </div>
@@ -106,7 +106,7 @@
     <!-- Footer -->
     <footer class="mt-auto border-t border-slate-900 bg-slate-950/40 py-6 text-center text-sm text-slate-500">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p>&copy; 2026 Fun Teacher Private LMS. Dikembangkan oleh <span class="text-slate-300 font-medium">Bintang Darma Sakti</span>.</p>
+            <p>&copy; 2026 Smart Class LMS. Dikembangkan oleh <span class="text-slate-300 font-medium">Bintang Darma Sakti</span>.</p>
         </div>
     </footer>
 </body>
