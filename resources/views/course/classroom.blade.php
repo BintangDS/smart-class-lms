@@ -44,7 +44,7 @@
                             @endphp
                             <div class="flex items-center justify-between rounded-lg p-1.5 text-xs transition duration-155 
                                       {{ $isActive ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30' : 'hover:bg-slate-900/60 text-slate-400 hover:text-slate-200' }}">
-                                <a href="{{ route('classroom', ['courseId' => $course->id, 'lesson_id' => $les->id]) }}" class="truncate flex-1 pr-2">
+                                <a href="{{ route('classroom', ['id' => $course->id, 'lesson_id' => $les->id]) }}" class="truncate flex-1 pr-2">
                                     📖 {{ $les->title }}
                                 </a>
                                 <div class="flex items-center gap-1.5 shrink-0">

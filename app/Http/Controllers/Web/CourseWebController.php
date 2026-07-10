@@ -332,7 +332,7 @@ class CourseWebController extends Controller
         $nextLesson = $allLessons->get($currentIndex + 1);
 
         if ($nextLesson) {
-            return redirect()->route('classroom', ['courseId' => $courseId, 'lesson_id' => $nextLesson->id])
+            return redirect()->route('classroom', ['id' => $courseId, 'lesson_id' => $nextLesson->id])
                 ->with('success', 'Materi berhasil diselesaikan!');
         }
 
