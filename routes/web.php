@@ -34,6 +34,17 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/modules/{id}/lessons', [CourseWebController::class, 'storeLesson'])->name('lessons.store');
     Route::delete('/lessons/{id}', [CourseWebController::class, 'destroyLesson'])->name('lessons.destroy');
 
+    // Manajemen Kuis & Ujian (Instructor)
+    Route::post('/modules/{moduleId}/quizzes', [CourseWebController::class, 'storeQuiz'])->name('quizzes.store');
+    Route::delete('/quizzes/{id}', [CourseWebController::class, 'destroyQuiz'])->name('quizzes.destroy');
+    Route::get('/quizzes/{id}/questions', [CourseWebController::class, 'manageQuizQuestions'])->name('quizzes.questions.manage');
+    Route::post('/quizzes/{id}/questions', [CourseWebController::class, 'storeQuizQuestion'])->name('quizzes.questions.store');
+    Route::delete('/questions/{id}', [CourseWebController::class, 'destroyQuizQuestion'])->name('quizzes.questions.destroy');
+
+    // Manajemen Tugas/Assignment (Instructor)
+    Route::post('/modules/{moduleId}/assignments', [CourseWebController::class, 'storeAssignment'])->name('assignments.store');
+    Route::delete('/assignments/{id}', [CourseWebController::class, 'destroyAssignment'])->name('assignments.destroy');
+
     // Alur Belajar Siswa / Ruang Kelas
     Route::post('/courses/{id}/enroll', [CourseWebController::class, 'enroll'])->name('courses.enroll');
     Route::get('/courses/{id}/classroom', [CourseWebController::class, 'classroom'])->name('classroom');

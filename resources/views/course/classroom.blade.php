@@ -83,30 +83,87 @@
                             @foreach($module->quizzes as $q)
                             @php $att = $attempts->get($q->id); @endphp
                             <div class="flex items-center justify-between text-[10px] text-slate-400 px-2 py-1 bg-slate-900/20 rounded">
-                                <span>📝 Kuis: {{ $q->title }}</span>
-                                @if($att)
-                                    <span class="font-bold text-indigo-400">Skor: {{ $att->score }}</span>
-                                @else
-                                    <span class="text-amber-500">Belum Ujian</span>
-                                @endif
+                                <span class="truncate pr-1">📝 Kuis: {{ $q->title }}</span>
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    @if(Auth::user()->role === 'instructor')
+                                        <a href="{{ route('quizzes.questions.manage', $q->id) }}" class="text-indigo-400 hover:text-indigo-300 font-semibold text-[9px]">Kelola Soal</a>
+                                        <form action="{{ route('quizzes.destroy', $q->id) }}" method="POST" onsubmit="return confirm('Hapus kuis ini?');" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-rose-500/60 hover:text-rose-400 font-bold px-0.5">&times;</button>
+                                        </form>
+                                    @else
+                                        @if($att)
+                                            <span class="font-bold text-indigo-400">Skor: {{ $att->score }}</span>
+                                        @else
+                                            <span class="text-amber-500">Belum Ujian</span>
+                                        @endif
+                                    @endif
+                                </div>
                             </div>
                             @endforeach
 
                             @foreach($module->assignments as $a)
                             @php $sub = $submissions->get($a->id); @endphp
                             <div class="flex items-center justify-between text-[10px] text-slate-400 px-2 py-1 bg-slate-900/20 rounded mt-1">
-                                <span>📁 Tugas: {{ $a->title }}</span>
-                                @if($sub)
-                                    @if($sub->score !== null)
-                                        <span class="font-bold text-emerald-400">Nilai: {{ $sub->score }}</span>
+                                <span class="truncate pr-1">📁 Tugas: {{ $a->title }}</span>
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    @if(Auth::user()->role === 'instructor')
+                                        <form action="{{ route('assignments.destroy', $a->id) }}" method="POST" onsubmit="return confirm('Hapus tugas ini?');" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-rose-500/60 hover:text-rose-400 font-bold px-0.5">&times;</button>
+                                        </form>
                                     @else
-                                        <span class="text-indigo-400">Dikumpul</span>
+                                        @if($sub)
+                                            @if($sub->score !== null)
+                                                <span class="font-bold text-emerald-400">Nilai: {{ $sub->score }}</span>
+                                            @else
+                                                <span class="text-indigo-400">Dikumpul</span>
+                                            @endif
+                                        @else
+                                            <span class="text-amber-500">Belum Kumpul</span>
+                                        @endif
                                     @endif
-                                @else
-                                    <span class="text-amber-500">Belum Kumpul</span>
-                                @endif
+                                </div>
                             </div>
                             @endforeach
+                        </div>
+                        @endif
+
+                        <!-- Form Tambah Kuis & Tugas (Instructor Only) -->
+                        @if(Auth::user()->role === 'instructor' && $course->instructor_id === Auth::id())
+                        <div class="mt-2 pt-2 border-t border-slate-900 space-y-2">
+                            <details class="group">
+                                <summary class="list-none flex items-center justify-between text-[10px] text-slate-400 cursor-pointer hover:text-slate-200">
+                                    <span>+ Tambah Kuis Baru</span>
+                                    <span class="transition group-open:rotate-180">&darr;</span>
+                                </summary>
+                                <form action="{{ route('quizzes.store', $module->id) }}" method="POST" class="mt-1 space-y-1.5 pl-2 border-l border-slate-855">
+                                    @csrf
+                                    <input type="text" name="title" required placeholder="Judul Kuis..." class="w-full rounded bg-slate-950 px-2 py-1 text-[10px] text-slate-100 placeholder-slate-600 outline-none border border-slate-900 focus:border-indigo-500">
+                                    <input type="number" name="passing_score" required min="0" max="100" value="70" placeholder="Skor Kelulusan (0-100)..." class="w-full rounded bg-slate-950 px-2 py-1 text-[10px] text-slate-100 placeholder-slate-600 outline-none border border-slate-900 focus:border-indigo-500">
+                                    <button type="submit" class="w-full rounded bg-indigo-600/80 hover:bg-indigo-600 text-white text-[9px] font-semibold py-1 transition">Simpan Kuis</button>
+                                </form>
+                            </details>
+
+                            <details class="group">
+                                <summary class="list-none flex items-center justify-between text-[10px] text-slate-400 cursor-pointer hover:text-slate-200">
+                                    <span>+ Tambah Tugas Baru</span>
+                                    <span class="transition group-open:rotate-180">&darr;</span>
+                                </summary>
+                                <form action="{{ route('assignments.store', $module->id) }}" method="POST" class="mt-1 space-y-1.5 pl-2 border-l border-slate-855">
+                                    @csrf
+                                    <input type="text" name="title" required placeholder="Judul Tugas..." class="w-full rounded bg-slate-950 px-2 py-1 text-[10px] text-slate-100 placeholder-slate-600 outline-none border border-slate-900 focus:border-indigo-500">
+                                    <textarea name="description" required placeholder="Instruksi Tugas..." rows="2" class="w-full rounded bg-slate-950 px-2 py-1 text-[10px] text-slate-100 placeholder-slate-600 outline-none border border-slate-900 focus:border-indigo-500"></textarea>
+                                    <input type="number" name="max_score" required min="1" value="100" placeholder="Nilai Maksimal..." class="w-full rounded bg-slate-950 px-2 py-1 text-[10px] text-slate-100 placeholder-slate-600 outline-none border border-slate-900 focus:border-indigo-500">
+                                    <div class="space-y-0.5 text-left">
+                                        <label class="text-[8px] text-slate-500 block">Batas Waktu (Due Date)</label>
+                                        <input type="datetime-local" name="due_date" required class="w-full rounded bg-slate-950 px-2 py-1 text-[10px] text-slate-100 outline-none border border-slate-900 focus:border-indigo-500">
+                                    </div>
+                                    <button type="submit" class="w-full rounded bg-indigo-600/80 hover:bg-indigo-600 text-white text-[9px] font-semibold py-1 transition">Simpan Tugas</button>
+                                </form>
+                            </details>
                         </div>
                         @endif
                     </div>

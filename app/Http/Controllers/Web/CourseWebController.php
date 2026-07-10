@@ -10,6 +10,8 @@ use App\Models\Module;
 use App\Models\Lesson;
 use App\Models\LessonProgress;
 use App\Models\Quiz;
+use App\Models\QuizQuestion;
+use App\Models\QuizOption;
 use App\Models\QuizAttempt;
 use App\Models\Assignment;
 use App\Models\AssignmentSubmission;
@@ -432,5 +434,163 @@ class CourseWebController extends Controller
         ]);
 
         return back()->with('success', 'Penilaian tugas berhasil disimpan!');
+    }
+
+    /**
+     * Store a new quiz.
+     */
+    public function storeQuiz(Request $request, $moduleId)
+    {
+        $module = Module::findOrFail($moduleId);
+        $course = $module->course;
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'passing_score' => 'required|integer|min:0|max:100',
+        ]);
+
+        Quiz::create([
+            'module_id' => $moduleId,
+            'title' => $request->title,
+            'passing_score' => $request->passing_score,
+        ]);
+
+        return back()->with('success', 'Kuis berhasil dibuat! Silakan kelola soal kuis.');
+    }
+
+    /**
+     * Delete a quiz.
+     */
+    public function destroyQuiz($id)
+    {
+        $quiz = Quiz::findOrFail($id);
+        $course = $quiz->module->course;
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $quiz->delete();
+
+        return back()->with('success', 'Kuis berhasil dihapus!');
+    }
+
+    /**
+     * Manage Quiz Questions page.
+     */
+    public function manageQuizQuestions($quizId)
+    {
+        $quiz = Quiz::with('questions.options')->findOrFail($quizId);
+        $course = $quiz->module->course;
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        return view('quiz.manage', compact('quiz', 'course'));
+    }
+
+    /**
+     * Add question & options to quiz.
+     */
+    public function storeQuizQuestion(Request $request, $quizId)
+    {
+        $quiz = Quiz::findOrFail($quizId);
+        $course = $quiz->module->course;
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $request->validate([
+            'question_text' => 'required|string',
+            'options' => 'required|array|size:4',
+            'options.*' => 'required|string|max:255',
+            'correct_option' => 'required|integer|min:0|max:3',
+        ]);
+
+        $question = QuizQuestion::create([
+            'quiz_id' => $quizId,
+            'question_text' => $request->question_text,
+        ]);
+
+        foreach ($request->options as $index => $optionText) {
+            QuizOption::create([
+                'question_id' => $question->id,
+                'option_text' => $optionText,
+                'is_correct' => $index == $request->correct_option,
+            ]);
+        }
+
+        return back()->with('success', 'Pertanyaan berhasil ditambahkan!');
+    }
+
+    /**
+     * Delete a question.
+     */
+    public function destroyQuizQuestion($id)
+    {
+        $question = QuizQuestion::findOrFail($id);
+        $quiz = $question->quiz;
+        $course = $quiz->module->course;
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $question->delete();
+
+        return back()->with('success', 'Pertanyaan berhasil dihapus!');
+    }
+
+    /**
+     * Store a new assignment.
+     */
+    public function storeAssignment(Request $request, $moduleId)
+    {
+        $module = Module::findOrFail($moduleId);
+        $course = $module->course;
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'max_score' => 'required|integer|min:1',
+            'due_date' => 'required|date_format:Y-m-d\TH:i',
+        ]);
+
+        Assignment::create([
+            'module_id' => $moduleId,
+            'title' => $request->title,
+            'description' => $request->description,
+            'max_score' => $request->max_score,
+            'due_date' => $request->due_date,
+        ]);
+
+        return back()->with('success', 'Tugas berhasil dibuat!');
+    }
+
+    /**
+     * Delete an assignment.
+     */
+    public function destroyAssignment($id)
+    {
+        $assignment = Assignment::findOrFail($id);
+        $course = $assignment->module->course;
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $assignment->delete();
+
+        return back()->with('success', 'Tugas berhasil dihapus!');
     }
 }
