@@ -1,11 +1,11 @@
-# 🎓 Smart Class LMS (Laravel 11)
+# 🎓 Smart Class LMS (Laravel 13)
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/512px-laravel-featured.png" alt="Laravel Logo" width="300">
+  <img src="https://laravel.com/img/logotype.min.svg" alt="Laravel Logo" width="350">
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel 11">
+  <img src="https://img.shields.io/badge/Laravel-13.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel 13">
   <img src="https://img.shields.io/badge/Tailwind_CSS-3.x-38BDF8?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
   <img src="https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite">
   <img src="https://img.shields.io/badge/Postman-API_Collection-FF6C37?style=for-the-badge&logo=postman&logoColor=white" alt="Postman">
