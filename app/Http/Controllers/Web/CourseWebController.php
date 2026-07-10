@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
-use App\Models\Enrollment;
+use App\Models\Category;
+use App\Models\Module;
 use App\Models\Lesson;
 use App\Models\LessonProgress;
 use App\Models\Quiz;
@@ -15,6 +16,7 @@ use App\Services\ProgressService;
 use App\Services\QuizService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Gate;
 
@@ -27,6 +29,200 @@ class CourseWebController extends Controller
     {
         $this->progressService = $progressService;
         $this->quizService = $quizService;
+    }
+
+    /**
+     * Show form to create a new course.
+     */
+    public function create()
+    {
+        if (Auth::user()->role !== 'instructor') {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $categories = Category::all();
+        return view('course.create', compact('categories'));
+    }
+
+    /**
+     * Store a newly created course.
+     */
+    public function store(Request $request)
+    {
+        if (Auth::user()->role !== 'instructor') {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'level' => 'required|in:beginner,intermediate,advanced',
+            'status' => 'required|in:draft,published',
+        ]);
+
+        Course::create([
+            'instructor_id' => Auth::id(),
+            'category_id' => $request->category_id,
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
+            'description' => $request->description,
+            'level' => $request->level,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Kursus berhasil dibuat!');
+    }
+
+    /**
+     * Show form to edit an existing course.
+     */
+    public function edit($id)
+    {
+        $course = Course::findOrFail($id);
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $categories = Category::all();
+        return view('course.edit', compact('course', 'categories'));
+    }
+
+    /**
+     * Update an existing course.
+     */
+    public function update(Request $request, $id)
+    {
+        $course = Course::findOrFail($id);
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'level' => 'required|in:beginner,intermediate,advanced',
+            'status' => 'required|in:draft,published',
+        ]);
+
+        $course->update([
+            'category_id' => $request->category_id,
+            'title' => $request->title,
+            'slug' => Str::slug($request->title),
+            'description' => $request->description,
+            'level' => $request->level,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Kursus berhasil diperbarui!');
+    }
+
+    /**
+     * Delete an existing course.
+     */
+    public function destroy($id)
+    {
+        $course = Course::findOrFail($id);
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $course->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Kursus berhasil dihapus!');
+    }
+
+    /**
+     * Store a new module under a course.
+     */
+    public function storeModule(Request $request, $courseId)
+    {
+        $course = Course::findOrFail($courseId);
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'order' => 'required|integer|min:1',
+        ]);
+
+        Module::create([
+            'course_id' => $courseId,
+            'title' => $request->title,
+            'order' => $request->order,
+        ]);
+
+        return back()->with('success', 'Modul berhasil ditambahkan!');
+    }
+
+    /**
+     * Delete a module.
+     */
+    public function destroyModule($id)
+    {
+        $module = Module::findOrFail($id);
+        $course = $module->course;
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $module->delete();
+
+        return back()->with('success', 'Modul berhasil dihapus!');
+    }
+
+    /**
+     * Store a new lesson under a module.
+     */
+    public function storeLesson(Request $request, $moduleId)
+    {
+        $module = Module::findOrFail($moduleId);
+        $course = $module->course;
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content_type' => 'required|in:text,video,document',
+            'content' => 'required|string',
+            'order' => 'required|integer|min:1',
+        ]);
+
+        Lesson::create([
+            'module_id' => $moduleId,
+            'title' => $request->title,
+            'content_type' => $request->content_type,
+            'content' => $request->content,
+            'order' => $request->order,
+        ]);
+
+        return back()->with('success', 'Materi berhasil ditambahkan!');
+    }
+
+    /**
+     * Delete a lesson.
+     */
+    public function destroyLesson($id)
+    {
+        $lesson = Lesson::findOrFail($id);
+        $course = $lesson->module->course;
+
+        if (Auth::user()->role !== 'instructor' || $course->instructor_id !== Auth::id()) {
+            abort(403, 'Aksi tidak diotorisasi.');
+        }
+
+        $lesson->delete();
+
+        return redirect()->route('classroom', $course->id)->with('success', 'Materi berhasil dihapus!');
     }
 
     /**

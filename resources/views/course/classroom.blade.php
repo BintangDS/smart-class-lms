@@ -25,7 +25,16 @@
                 <div class="space-y-3">
                     @forelse($course->modules as $module)
                     <div class="rounded-xl border border-slate-800/80 bg-slate-950/40 p-3 space-y-2">
-                        <h4 class="text-xs font-bold text-slate-300">{{ $module->title }}</h4>
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold text-slate-300">{{ $module->title }}</h4>
+                            @if(Auth::user()->role === 'instructor' && $course->instructor_id === Auth::id())
+                            <form action="{{ route('modules.destroy', $module->id) }}" method="POST" onsubmit="return confirm('Hapus modul beserta seluruh materinya?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-[9px] text-rose-400 hover:text-rose-300 transition">Hapus</button>
+                            </form>
+                            @endif
+                        </div>
                         
                         <div class="space-y-1">
                             @forelse($module->lessons as $les)
@@ -33,18 +42,40 @@
                                 $isCompleted = in_class_complete($les->id, $completedLessonIds);
                                 $isActive = $activeLesson && $activeLesson->id === $les->id;
                             @endphp
-                            <a href="{{ route('classroom', ['courseId' => $course->id, 'lesson_id' => $les->id]) }}" 
-                               class="flex items-center justify-between rounded-lg p-2 text-xs transition duration-155 
+                            <div class="flex items-center justify-between rounded-lg p-1.5 text-xs transition duration-155 
                                       {{ $isActive ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30' : 'hover:bg-slate-900/60 text-slate-400 hover:text-slate-200' }}">
-                                <span class="truncate flex-1 pr-2">📖 {{ $les->title }}</span>
-                                @if($isCompleted)
-                                    <span class="rounded bg-emerald-500/10 px-1.5 py-0.5 text-[9px] font-bold text-emerald-400">SELESAI</span>
-                                @endif
-                            </a>
+                                <a href="{{ route('classroom', ['courseId' => $course->id, 'lesson_id' => $les->id]) }}" class="truncate flex-1 pr-2">
+                                    📖 {{ $les->title }}
+                                </a>
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    @if($isCompleted)
+                                        <span class="rounded bg-emerald-500/10 px-1.5 py-0.5 text-[9px] font-bold text-emerald-400">SELESAI</span>
+                                    @endif
+                                    @if(Auth::user()->role === 'instructor' && $course->instructor_id === Auth::id())
+                                    <form action="{{ route('lessons.destroy', $les->id) }}" method="POST" onsubmit="return confirm('Hapus materi ini?');" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-[9px] text-rose-500/60 hover:text-rose-400 font-bold px-1">&times;</button>
+                                    </form>
+                                    @endif
+                                </div>
+                            </div>
                             @empty
                             <p class="text-[10px] text-slate-600 pl-2">Materi belum tersedia</p>
                             @endforelse
                         </div>
+
+                        <!-- Form Tambah Lesson (Instructor Only) -->
+                        @if(Auth::user()->role === 'instructor' && $course->instructor_id === Auth::id())
+                        <form action="{{ route('lessons.store', $module->id) }}" method="POST" class="mt-2 pt-2 border-t border-slate-900 space-y-1.5">
+                            @csrf
+                            <input type="text" name="title" required placeholder="Judul materi baru..." class="w-full rounded bg-slate-950 px-2 py-1 text-[10px] text-slate-100 placeholder-slate-600 outline-none border border-slate-900 focus:border-indigo-500">
+                            <input type="hidden" name="content_type" value="text">
+                            <input type="hidden" name="order" value="{{ $module->lessons->count() + 1 }}">
+                            <textarea name="content" required placeholder="Isi materi..." rows="2" class="w-full rounded bg-slate-950 px-2 py-1 text-[10px] text-slate-100 placeholder-slate-600 outline-none border border-slate-900 focus:border-indigo-500"></textarea>
+                            <button type="submit" class="w-full rounded bg-indigo-600/80 hover:bg-indigo-600 text-white text-[9px] font-semibold py-1 transition">+ Tambah Materi</button>
+                        </form>
+                        @endif
 
                         <!-- Quiz / Assignment info inside module -->
                         @if($module->quizzes->count() > 0 || $module->assignments->count() > 0)
@@ -83,6 +114,16 @@
                     <p class="text-xs text-slate-500">Modul belum dibuat.</p>
                     @endforelse
                 </div>
+
+                <!-- Form Tambah Modul (Instructor Only) -->
+                @if(Auth::user()->role === 'instructor' && $course->instructor_id === Auth::id())
+                <form action="{{ route('modules.store', $course->id) }}" method="POST" class="mt-4 pt-3 border-t border-slate-800 space-y-2">
+                    @csrf
+                    <input type="text" name="title" required placeholder="Judul modul baru..." class="w-full rounded-xl bg-slate-950 px-3 py-2 text-xs text-slate-100 placeholder-slate-500 outline-none border border-slate-900 focus:border-indigo-500">
+                    <input type="hidden" name="order" value="{{ $course->modules->count() + 1 }}">
+                    <button type="submit" class="w-full rounded-xl bg-slate-850 hover:bg-slate-800 text-indigo-400 text-xs font-semibold py-2 transition border border-indigo-500/10">+ Tambah Modul Baru</button>
+                </form>
+                @endif
             </div>
         </div>
 

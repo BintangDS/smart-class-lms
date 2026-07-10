@@ -19,6 +19,21 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Manajemen Kursus (Instructor)
+    Route::get('/courses/create', [CourseWebController::class, 'create'])->name('courses.create');
+    Route::post('/courses', [CourseWebController::class, 'store'])->name('courses.store');
+    Route::get('/courses/{id}/edit', [CourseWebController::class, 'edit'])->name('courses.edit');
+    Route::put('/courses/{id}', [CourseWebController::class, 'update'])->name('courses.update');
+    Route::delete('/courses/{id}', [CourseWebController::class, 'destroy'])->name('courses.destroy');
+
+    // Manajemen Modul (Instructor)
+    Route::post('/courses/{id}/modules', [CourseWebController::class, 'storeModule'])->name('modules.store');
+    Route::delete('/modules/{id}', [CourseWebController::class, 'destroyModule'])->name('modules.destroy');
+
+    // Manajemen Lesson/Materi (Instructor)
+    Route::post('/modules/{id}/lessons', [CourseWebController::class, 'storeLesson'])->name('lessons.store');
+    Route::delete('/lessons/{id}', [CourseWebController::class, 'destroyLesson'])->name('lessons.destroy');
+
     // Alur Belajar Siswa / Ruang Kelas
     Route::post('/courses/{id}/enroll', [CourseWebController::class, 'enroll'])->name('courses.enroll');
     Route::get('/courses/{id}/classroom', [CourseWebController::class, 'classroom'])->name('classroom');

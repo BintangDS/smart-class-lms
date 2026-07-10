@@ -4,10 +4,14 @@
 
 @section('content')
 <div class="space-y-8">
-    <!-- Header -->
-    <div>
-        <h1 class="text-3xl font-extrabold tracking-tight text-white">Dashboard Instruktur</h1>
-        <p class="text-slate-400 mt-1">Buat materi kelas, kelola tugas, dan beri penilaian pada karya siswa.</p>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-white">Dashboard Instruktur</h1>
+            <p class="text-slate-400 mt-1">Buat materi kelas, kelola tugas, dan beri penilaian pada karya siswa.</p>
+        </div>
+        <a href="{{ route('courses.create') }}" class="rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 hover:from-indigo-600 hover:to-violet-700 text-white font-semibold text-sm px-5 py-3 transition duration-200 shadow-lg shadow-indigo-500/20 text-center">
+            + Buat Kursus Baru
+        </a>
     </div>
 
     <!-- Stats -->
@@ -51,11 +55,25 @@
                     <h4 class="text-base font-bold text-white leading-tight mb-2">{{ $course->title }}</h4>
                     <p class="text-xs text-slate-400 line-clamp-2 mb-4">{{ $course->description }}</p>
                 </div>
-                <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
-                    <span class="text-xs text-slate-400 font-medium">👥 {{ $course->enrollments_count }} Murid</span>
-                    <a href="{{ route('classroom', $course->id) }}" class="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition">
-                        Masuk Ruang Kelas &rarr;
-                    </a>
+                <div class="pt-4 border-t border-slate-800/80 space-y-3">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-400 font-medium">👥 {{ $course->enrollments_count }} Murid</span>
+                        <a href="{{ route('classroom', $course->id) }}" class="font-semibold text-indigo-400 hover:text-indigo-300 transition">
+                            Masuk Kelas &rarr;
+                        </a>
+                    </div>
+                    <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-900/60">
+                        <a href="{{ route('courses.edit', $course->id) }}" class="rounded bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-1 text-[10px] font-semibold transition border border-slate-700">
+                            Edit
+                        </a>
+                        <form action="{{ route('courses.destroy', $course->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kelas ini?');" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="rounded bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 px-2 py-1 text-[10px] font-semibold transition border border-rose-500/20">
+                                Hapus
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
             @empty
