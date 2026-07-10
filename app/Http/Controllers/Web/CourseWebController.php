@@ -593,4 +593,16 @@ class CourseWebController extends Controller
 
         return back()->with('success', 'Tugas berhasil dihapus!');
     }
+
+    /**
+     * View Certificate page (Public).
+     */
+    public function viewCertificate($code)
+    {
+        $certificate = Certificate::where('certificate_code', $code)
+            ->with(['user', 'course.instructor'])
+            ->firstOrFail();
+
+        return view('course.certificate', compact('certificate'));
+    }
 }

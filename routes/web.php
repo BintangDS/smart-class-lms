@@ -15,6 +15,9 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+// Halaman Verifikasi Sertifikat Publik (Bisa dibagikan ke LinkedIn/CV)
+Route::get('/certificates/{code}', [CourseWebController::class, 'viewCertificate'])->name('certificates.view');
+
 // Rute Terproteksi Auth Web
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
