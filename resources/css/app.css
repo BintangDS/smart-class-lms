@@ -142,8 +142,8 @@ html:not(.dark) .glass-row {
 /* Fix text white on buttons and gradient backgrounds in light mode */
 html:not(.dark) .bg-indigo-600,
 html:not(.dark) .bg-indigo-600 *,
-html:not(.dark) [class*="bg-gradient-to-"],
-html:not(.dark) [class*="bg-gradient-to-"] * {
+html:not(.dark) [class*="bg-gradient-to-"]:not([class*="bg-clip-"]),
+html:not(.dark) [class*="bg-gradient-to-"]:not([class*="bg-clip-"]) * {
     color: #ffffff !important;
 }
 
