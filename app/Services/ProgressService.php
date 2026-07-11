@@ -45,8 +45,8 @@ class ProgressService
             if (!$enrollment->completed_at) {
                 $enrollment->completed_at = now();
             }
-            // Generate certificate
-            $this->certificateService->generate($enrollment);
+            // Dispatch job to generate certificate asynchronously in the background
+            \App\Jobs\GenerateCertificateJob::dispatch($enrollment);
         } else {
             $enrollment->completed_at = null;
         }

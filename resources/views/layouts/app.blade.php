@@ -1,8 +1,15 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-slate-950 text-slate-100">
+<html lang="id" class="h-full bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
     <title>@yield('title', 'LMS Dashboard') - Smart Class LMS</title>
     
     <!-- Google Fonts -->
@@ -49,23 +56,37 @@
                     </div>
                 </div>
 
-                @auth
                 <div class="flex items-center gap-4">
-                    <div class="hidden md:flex flex-col text-right">
-                        <span class="text-sm font-semibold text-slate-200">{{ Auth::user()->name }}</span>
-                        <span class="text-xs text-slate-400 capitalize">{{ Auth::user()->role }}</span>
+                    <!-- Theme Toggle Button -->
+                    <button id="theme-toggle" type="button" class="rounded-lg p-2 text-slate-400 hover:bg-slate-800/60 hover:text-slate-100 focus:outline-none transition duration-200 border border-transparent hover:border-slate-700">
+                        <!-- Dark Icon (Moon) -->
+                        <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                        </svg>
+                        <!-- Light Icon (Sun) -->
+                        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.46 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 100 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+
+                    @auth
+                    <div class="flex items-center gap-4 border-l border-slate-800/60 pl-4">
+                        <div class="hidden md:flex flex-col text-right">
+                            <span class="text-sm font-semibold text-slate-200">{{ Auth::user()->name }}</span>
+                            <span class="text-xs text-slate-400 capitalize">{{ Auth::user()->role }}</span>
+                        </div>
+                        <div class="h-9 w-9 rounded-full bg-slate-800 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold uppercase">
+                            {{ substr(Auth::user()->name, 0, 2) }}
+                        </div>
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="rounded-lg bg-slate-800 hover:bg-slate-700/80 px-3 py-1.5 text-xs font-semibold text-slate-300 transition duration-200 border border-slate-700 hover:border-slate-600">
+                                Keluar
+                            </button>
+                        </form>
                     </div>
-                    <div class="h-9 w-9 rounded-full bg-slate-800 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold uppercase">
-                        {{ substr(Auth::user()->name, 0, 2) }}
-                    </div>
-                    <form action="{{ route('logout') }}" method="POST" class="inline">
-                        @csrf
-                        <button type="submit" class="rounded-lg bg-slate-800 hover:bg-slate-700/80 px-3 py-1.5 text-xs font-semibold text-slate-300 transition duration-200 border border-slate-700 hover:border-slate-600">
-                            Keluar
-                        </button>
-                    </form>
+                    @endauth
                 </div>
-                @endauth
             </div>
         </div>
     </nav>
@@ -109,5 +130,45 @@
             <p>&copy; 2026 Smart Class LMS. Dikembangkan oleh <span class="text-slate-300 font-medium">Bintang Darma Sakti</span>.</p>
         </div>
     </footer>
+
+    <script>
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Show proper icon based on theme state
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        const themeToggleBtn = document.getElementById('theme-toggle');
+
+        themeToggleBtn.addEventListener('click', function() {
+            // Toggle icons inside button
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            // If set via local storage previously
+            if (localStorage.getItem('theme')) {
+                if (localStorage.getItem('theme') === 'light') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                }
+            } else {
+                // If not set previously, check document class
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('theme', 'dark');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
