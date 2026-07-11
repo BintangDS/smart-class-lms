@@ -96,6 +96,18 @@ class DashboardController extends Controller
         // Catalog of available published courses that the student has not enrolled in yet
         $enrolledCourseIds = $myEnrollments->pluck('course_id');
         
+        // Fetch all assignments for enrolled courses, ordered by nearest due date
+        $myAssignments = \App\Models\Assignment::whereIn('module_id', function ($query) use ($enrolledCourseIds) {
+            $query->select('id')
+                  ->from('modules')
+                  ->whereIn('course_id', $enrolledCourseIds);
+        })
+        ->with(['module.course', 'submissions' => function ($query) use ($student) {
+            $query->where('user_id', $student->id);
+        }])
+        ->orderBy('due_date', 'asc')
+        ->get();
+        
         $query = Course::where('status', 'published')
             ->whereNotIn('id', $enrolledCourseIds)
             ->with(['instructor', 'category']);
@@ -111,6 +123,6 @@ class DashboardController extends Controller
         $catalogCourses = $query->latest()->paginate(9);
         $categories = \App\Models\Category::all();
 
-        return view('dashboard.student', compact('myEnrollments', 'myCertificates', 'catalogCourses', 'categories'));
+        return view('dashboard.student', compact('myEnrollments', 'myCertificates', 'catalogCourses', 'categories', 'myAssignments'));
     }
 }
