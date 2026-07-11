@@ -49,7 +49,9 @@
                                 LULUS
                             </span>
                         @else
-                            <span class="text-[10px] text-slate-500 font-medium">Aktif</span>
+                            <span class="inline-flex items-center gap-1 rounded bg-slate-800/60 px-1.5 py-0.5 text-[10px] font-bold text-slate-400 border border-slate-700/50">
+                                AKTIF
+                            </span>
                         @endif
                         <a href="{{ route('classroom', $enrollment->course_id) }}" class="rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs px-4 py-2 transition duration-200">
                             Masuk Kelas
@@ -74,7 +76,7 @@
         </h2>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             @foreach($myCertificates as $cert)
-            <div class="rounded-xl border border-emerald-500/10 bg-emerald-950/10 p-4 flex items-center justify-between border-dashed hover:border-emerald-500/30 transition duration-200">
+            <div class="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 flex items-center justify-between border-dashed hover:border-emerald-500/50 transition duration-200">
                 <div class="space-y-1">
                     <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">{{ $cert->certificate_code }}</span>
                     <h4 class="text-sm font-bold text-white">{{ $cert->course->title }}</h4>
