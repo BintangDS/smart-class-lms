@@ -36,9 +36,12 @@
         </button>
     </div>
 
-    <!-- Glowing background elements -->
-    <div class="absolute top-1/4 left-1/4 -z-10 h-72 w-72 rounded-full bg-indigo-600/10 blur-3xl"></div>
-    <div class="absolute bottom-1/4 right-1/4 -z-10 h-96 w-96 rounded-full bg-violet-600/10 blur-3xl"></div>
+    <!-- Floating Orbs Background -->
+    <div class="orbs-wrapper">
+        <div class="orb orb-indigo"></div>
+        <div class="orb orb-violet"></div>
+        <div class="orb orb-emerald"></div>
+    </div>
 
     <div class="w-full max-w-md space-y-8">
         <!-- Logo & Header -->

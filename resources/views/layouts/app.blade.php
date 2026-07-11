@@ -42,6 +42,12 @@
     </style>
 </head>
 <body class="h-full flex flex-col antialiased">
+    <!-- Floating Orbs Background -->
+    <div class="orbs-wrapper">
+        <div class="orb orb-indigo"></div>
+        <div class="orb orb-violet"></div>
+        <div class="orb orb-emerald"></div>
+    </div>
     <!-- Navbar -->
     <nav class="sticky top-0 z-40 w-full border-b border-slate-800/60 bg-slate-900/80 backdrop-blur-md">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

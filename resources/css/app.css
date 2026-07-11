@@ -172,5 +172,75 @@ html:not(.dark) [class*="bg-indigo-600/20"] {
     border-color: rgba(99, 102, 241, 0.25) !important;
 }
 
+/* Floating Orbs Background Layer */
+.orbs-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    z-index: -10;
+    pointer-events: none;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.15; /* subtle glow in dark mode */
+    mix-blend-mode: screen;
+    transition: opacity 0.3s ease;
+}
+
+/* Make them slightly more visible in light mode for a beautiful pastel wash */
+html:not(.dark) .orb {
+    opacity: 0.18;
+    mix-blend-mode: multiply;
+}
+
+.orb-indigo {
+    background: radial-gradient(circle, #4f46e5 0%, rgba(99, 102, 241, 0) 70%);
+    width: 600px;
+    height: 600px;
+    top: -10%;
+    left: -10%;
+    animation: orb-float-1 25s ease-in-out infinite alternate;
+}
+
+.orb-violet {
+    background: radial-gradient(circle, #7c3aed 0%, rgba(139, 92, 246, 0) 70%);
+    width: 700px;
+    height: 700px;
+    bottom: -15%;
+    right: -10%;
+    animation: orb-float-2 30s ease-in-out infinite alternate;
+}
+
+.orb-emerald {
+    background: radial-gradient(circle, #10b981 0%, rgba(16, 185, 129, 0) 70%);
+    width: 500px;
+    height: 500px;
+    top: 30%;
+    right: 20%;
+    animation: orb-float-3 28s ease-in-out infinite alternate;
+}
+
+@keyframes orb-float-1 {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(100px, 80px) scale(1.1); }
+}
+
+@keyframes orb-float-2 {
+    0% { transform: translate(0, 0) scale(1.1); }
+    100% { transform: translate(-120px, -60px) scale(0.95); }
+}
+
+@keyframes orb-float-3 {
+    0% { transform: translate(0, 0) scale(0.9); }
+    100% { transform: translate(80px, -100px) scale(1.05); }
+}
+
+
 
 
