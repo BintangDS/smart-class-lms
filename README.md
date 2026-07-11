@@ -28,17 +28,28 @@ Proyek ini dirancang sebagai portofolio kelas industri (*industry-ready portfoli
 * **Web Session**: Login aman untuk Instruktur dan Siswa menggunakan sesi web standar.
 * **REST API Token**: Autentikasi token *stateful* menggunakan **Laravel Sanctum** untuk mendukung integrasi dengan aplikasi mobile (React Native) di masa depan.
 
-### 2. Manajemen Kursus Visual Penuh (CRUD Web)
+### 2. Pemrosesan Asinkronus dengan Laravel Queue
+* Pembuatan file PDF sertifikat kelulusan diproses secara asinkronus menggunakan **Laravel Queue & Background Jobs**. Hal ini mengoptimalkan performa web (non-blocking) sehingga siswa tidak perlu menunggu proses render PDF yang memakan waktu di browser.
+
+### 3. Glassmorphism UI & Toggle Tema (Terang/Gelap)
+* Tampilan antarmuka modern dengan gaya **Glassmorphism** dan pendaran bola cahaya (*floating orbs*) yang melayang secara halus di latar belakang.
+* Dilengkapi dengan tombol toggle tema Terang/Gelap di pojok atas yang tersimpan secara persisten menggunakan `localStorage` (anti-flicker).
+
+### 4. Dasbor Pintar & Sidebar Tugas Mendatang
+* Dasbor siswa dilengkapi dengan **Sidebar Tugas Mendatang (Upcoming Assignments)** yang mendeteksi semua tugas dari kelas yang diikuti secara real-time.
+* Tugas secara otomatis diurutkan berdasarkan batas waktu (*due date*) terdekat lengkap dengan status penilaian dinamis.
+
+### 5. Manajemen Kursus Visual Penuh (CRUD Web)
 * **Instruktur** dapat membuat, memperbarui, mengedit tingkat kesulitan, serta menghapus kursus langsung dari dashboard web.
 * **Manajemen Bab Modul**: Form penambahan modul dinamis dan penghapusan modul yang aman.
 * **Manajemen Materi (Lesson)**: Tambahkan materi baru dalam hitungan detik.
 
-### 3. Pembuat Kuis & Tugas Interaktif
+### 6. Pembuat Kuis & Tugas Interaktif
 * **Kelola Pertanyaan Kuis**: Halaman khusus bagi Instruktur untuk membuat pertanyaan kuis pilihan ganda, memasukkan 4 opsi jawaban, dan memilih kunci jawaban yang benar secara visual.
 * **Form Tugas Baru**: Buat tugas lengkap dengan deskripsi, nilai maksimal, serta batas waktu (*Due Date*).
 * **Penilaian Otomatis & Manual**: Kuis dinilai secara instan saat dikirim oleh siswa. Tugas dievaluasi dan diberi *feedback* secara manual oleh instruktur.
 
-### 4. Alur Belajar Siswa & Penerbitan Sertifikat Otomatis
+### 7. Alur Belajar Siswa & Penerbitan Sertifikat Otomatis
 * Siswa dapat menjelajahi katalog kelas, mendaftar (*enroll*) sekali klik, membaca materi, menandai materi selesai, dan memantau kemajuan belajar via *progress bar*.
 * **Sertifikat Kelulusan**: Kode sertifikat unik diterbitkan secara otomatis setelah kemajuan belajar siswa mencapai 100% (format: `CERT-YYYYMMDD-[RANDOM]`).
 
@@ -92,6 +103,13 @@ Proyek ini dirancang sebagai portofolio kelas industri (*industry-ready portfoli
    ```bash
    php artisan serve
    ```
+
+7. **Jalankan Antrean Pekerjaan (Laravel Queue Worker)**
+   *Karena proses pembuatan sertifikat PDF berjalan secara asinkronus, Anda wajib menjalankan worker berikut agar antrean pekerjaan dieksekusi di latar belakang:*
+   ```bash
+   php artisan queue:work
+   ```
+
    Aplikasi Anda kini sudah siap diakses melalui browser di **`http://127.0.0.1:8000`**!
 
 ---
