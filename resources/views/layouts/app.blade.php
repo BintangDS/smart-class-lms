@@ -58,7 +58,6 @@
                     </div>
                     <div>
                         <span class="text-lg font-bold bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">Smart Class LMS</span>
-                        <span class="ml-1 rounded bg-indigo-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-indigo-400 border border-indigo-500/20">PORTFOLIO</span>
                     </div>
                 </div>
 
