@@ -21,7 +21,11 @@ html:not(.dark) {
 }
 
 html:not(.dark) body {
-    background-color: #f1f5f9 !important;
+    background-color: transparent !important;
+}
+
+body {
+    background-color: transparent !important;
 }
 
 /* Page titles and text elements */
