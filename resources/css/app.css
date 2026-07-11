@@ -139,15 +139,11 @@ html:not(.dark) .glass-row {
     border: 1px solid rgba(99, 102, 241, 0.08) !important;
 }
 
-/* Fix text white on buttons and colored backgrounds in light mode */
-html:not(.dark) a[class*="bg-indigo-"],
-html:not(.dark) a[class*="bg-violet-"],
-html:not(.dark) button[class*="bg-indigo-"],
-html:not(.dark) button[class*="bg-violet-"],
-html:not(.dark) a[class*="bg-indigo-"] *,
-html:not(.dark) a[class*="bg-violet-"] *,
-html:not(.dark) button[class*="bg-indigo-"] *,
-html:not(.dark) button[class*="bg-violet-"] * {
+/* Fix text white on buttons and gradient backgrounds in light mode */
+html:not(.dark) .bg-indigo-600,
+html:not(.dark) .bg-indigo-600 *,
+html:not(.dark) [class*="bg-gradient-to-"],
+html:not(.dark) [class*="bg-gradient-to-"] * {
     color: #ffffff !important;
 }
 
