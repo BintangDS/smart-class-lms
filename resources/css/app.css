@@ -165,4 +165,16 @@ html:not(.dark) [class*="border-emerald-500"] {
     border-color: rgba(16, 185, 129, 0.2) !important; /* soft green border */
 }
 
+/* Adjust active curriculum sidebar items in light mode */
+html:not(.dark) [class*="text-indigo-300"] {
+    color: #3730a3 !important; /* rich indigo 800 */
+    font-weight: 600 !important;
+}
+
+html:not(.dark) [class*="bg-indigo-600/20"] {
+    background-color: rgba(99, 102, 241, 0.1) !important; /* soft indigo tint */
+    border-color: rgba(99, 102, 241, 0.25) !important;
+}
+
+
 
