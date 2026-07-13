@@ -52,9 +52,6 @@
             <h2 class="mt-6 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                 Smart Class LMS
             </h2>
-            <p class="mt-2 text-sm text-slate-400">
-                Portal LMS Portofolio Laravel & API
-            </p>
         </div>
 
         <!-- Glassmorphism Login Card -->
