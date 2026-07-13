@@ -217,7 +217,17 @@
                         </div>
                         
                         <a href="{{ route('classroom', $assignment->module->course_id) }}" class="block w-full text-center rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold py-2 transition border border-slate-700 hover:border-slate-600">
-                            Kerjakan Tugas &rarr;
+                            @if($sub)
+                                @if($sub->score !== null)
+                                    Lihat Hasil &rarr;
+                                @else
+                                    Lihat Detail Tugas &rarr;
+                                @endif
+                            @elseif($isOverdue)
+                                Lihat Tugas &rarr;
+                            @else
+                                Kerjakan Tugas &rarr;
+                            @endif
                         </a>
                     </div>
                     @empty
